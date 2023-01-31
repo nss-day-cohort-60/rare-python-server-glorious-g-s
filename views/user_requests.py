@@ -2,37 +2,6 @@ import sqlite3
 import json
 from models import User
 
-
-USERS = [
-    {
-        "id": 1,
-        "first_name": "Pat",
-        "last_name": "Mahomes",
-        "email": "pat@pat.com",
-        "bio": "Football player",
-        "username": "pat",
-        "password" : "pat",
-        "profile_image_url": "https://www.history.com/.image/ar_16:9%2Cc_fill%2Ccs_srgb%2Cfl_progressive%2Cq_auto:good%2Cw_1200/MTU3ODc4NjAwMDI2ODkxNTkz/the-nfl-begins-football-grass-2014-hero-2.jpg", 
-        "created_on": 1312023,
-        "active": 1,
-
-    },
-        {
-        "id": 2,
-        "first_name": "Jalen",
-        "last_name": "Hurts",
-        "email": "hurts@hurts.com",
-        "bio": "Football player",
-        "username": "jalen",
-        "password" : "hurt",
-        "profile_image_url": "https://assets3.cbsnewsstatic.com/hub/i/r/2022/03/14/08c8764e-029d-4bf2-8319-db05c67a20d3/thumbnail/640x392/be38c4b9e67216d7a78628552724738c/tom-brady-football.jpg", 
-        "created_on": 1312023,
-        "active": 1,
-
-    }
-]
-
-
 def get_all_users():
     with sqlite3.connect("./loaddata.sqlite3") as conn:
 
