@@ -45,8 +45,7 @@ INSERT INTO `Users` VALUES (null, "Jalen", "Hurts", "hurts@hurts.com", "Football
 
 INSERT INTO `Subscriptions` VALUES (null, 1, 2, 01312023);
 
-INSERT INTO `Posts` VALUES (NULL, 1, 2, "How to win a superbowl", 02072023, "https://www.si.com/.image/ar_4:3%2Cc_fill%2Ccs_srgb%2Cfl_progressive%2Cq_auto:good%2Cw_1200/MTc0NDU1OTQyMjAzNjQ3NjIy/college-football-covid-symptoms-cases-players.jpg", "You can win a superbowl by outscoring your opponent.", 1);
-
+INSERT INTO `Posts` VALUES (NULL, 2, "How to win a superbowl", 02072023, "https://www.si.com/.image/ar_4:3%2Cc_fill%2Ccs_srgb%2Cfl_progressive%2Cq_auto:good%2Cw_1200/MTc0NDU1OTQyMjAzNjQ3NjIy/college-football-covid-symptoms-cases-players.jpg", "You can win a superbowl by outscoring your opponent.", 1);
 INSERT INTO `Comments` VALUES (NULL, 1, 2, "That is not how you win a superbowl.");
 
 DELETE FROM Users 
