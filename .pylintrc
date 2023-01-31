@@ -1,4 +1,4 @@
-[FORMAT]
+echo '[FORMAT]
 good-names=i,
     j,
     ex,
@@ -12,6 +12,4 @@ good-names=i,
 
 [MESSAGES CONTROL]
 disable=broad-except,redefined-builtin,missing-module-docstring
-
-[FORMAT]
-max-line-length=240
+' > .pylintrc
