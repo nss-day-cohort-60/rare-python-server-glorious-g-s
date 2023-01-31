@@ -2,7 +2,7 @@ import sqlite3
 import json
 from models import Post
 
-def get_single_blog(id):
+def get_single_post(id):
     with sqlite3.connect("./loaddata.sqlite3") as conn:
         conn.row_factory = sqlite3.Row
         db_cursor = conn.cursor()
@@ -25,7 +25,7 @@ def get_single_blog(id):
         if data is None:
             return {}
 
-        # Create an animal instance from the current row
+        # Create an post instance from the current row
         post= Post(data['id'], data['user_id'], data['title'],
                             data['publication_id'], data['image_url'],
                             data['content'], data['approved'])
