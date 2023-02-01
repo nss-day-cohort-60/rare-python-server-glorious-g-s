@@ -1,19 +1,47 @@
 from urllib.parse import urlparse, parse_qs
 import json
 from http.server import BaseHTTPRequestHandler, HTTPServer
-from views import get_single_post, get_all_posts
-from views import get_all_users, get_single_user
+
+from views import get_single_post, get_all_posts, create_post
+from views import get_all_users, get_single_user, get_user_by_username
 from views import get_all_comments_by_post
-from views.user import create_user, login_user
+from views import create_user, login_user
+from views import get_all_comments_by_post, get_all_comments, get_single_comment
+
 
 
 class HandleRequests(BaseHTTPRequestHandler):
     """Handles the requests to this server"""
 
+    # def parse_url(self, path):
+    #     """Parse the url into the resource and id"""
+    #     parsed_url = urlparse(path)
+    #     path_params = self.path.split('/')
+    #     resource = path_params[1]
+
+    #     if parsed_url.query:
+    #         query = parse_qs(parsed_url.query)
+    #         return (resource, query)
+        
+    #     if '?' in resource:
+    #         param = resource.split('?')[1]
+    #         resource = resource.split('?')[0]
+    #         pair = param.split('=')
+    #         key = pair[0]
+    #         value = pair[1]
+    #         return (resource, key, value)
+    #     else:
+    #         id = None
+    #         try:
+    #             id = int(path_params[2])
+    #         except (IndexError, ValueError):
+    #             pass
+    #         return (resource, id)
+
     def parse_url(self, path):
         """Parse the url into the resource and id"""
         parsed_url = urlparse(path)
-        path_params = parsed_url.path.split('/')  # ['', 'animals', 1]
+        path_params = parsed_url.path.split('/')  # ['', 'snakes', 1]
         resource = path_params[1]
 
         if parsed_url.query:
@@ -79,15 +107,27 @@ class HandleRequests(BaseHTTPRequestHandler):
                 else:
                     self._set_headers(200)
                     response = get_all_users()
-            
-        else: # There is a ? in the path, run the query param functions
+
+            elif resource == "comments":
+                if id is not None:
+                    self._set_headers(200)
+                    response = get_single_comment(id)
+                
+                else:
+                    self._set_headers(200)
+                    response = get_all_comments()
+
+        else:  # There is a ? in the path, run the query param functions
             (resource, query) = parsed
 
-            # see if the query dictionary has an email key
-            if query.get('post_id') and resource == 'comments':
-                response = get_all_comments_by_post(query['post_id'][0])
+            if query.get('username') and resource == 'users':
+                self._set_headers(200)
+                response = get_user_by_username(query['username'][0])
 
-    
+            elif query.get('post_id') and resource == 'comments':
+                self._set_headers(200)
+                response = get_all_comments_by_post(query['post_id'][0])
+                
         self.wfile.write(json.dumps(response).encode())
 
         
