@@ -85,11 +85,15 @@ class HandleRequests(BaseHTTPRequestHandler):
                 else:
                     self._set_headers(200)
                     response = get_all_users()
+        else:
+            (resource, query) = parsed
+
+            if query.get('')
 
 
         self.wfile.write(json.dumps(response).encode())
 
-        pass
+        
 
     def do_POST(self):
         """Make a post request to the server"""

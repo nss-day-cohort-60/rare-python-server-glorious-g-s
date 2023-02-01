@@ -17,8 +17,8 @@ def get_all_comments_by_post(post_id):
             c.post_id,
             c.author_id,
             c.content
-        FROM Comment c
-        WHERE a.post_id = ?
+        FROM comments c
+        WHERE c.post_id = ?
         """, (post_id, ))
 
         # Initialize an empty list to hold all comment representations
@@ -64,10 +64,10 @@ def create_comment(new_comment):
     return new_comment
 
 def delete_comment(id):
-    with sqlite3.connect("./kennel.sqlite3") as conn:
+    with sqlite3.connect("./loaddata.sqlite3") as conn:
         db_cursor = conn.cursor()
 
         db_cursor.execute("""
-        DELETE FROM comment
+        DELETE FROM comments
         WHERE id = ?
         """, (id, ))
