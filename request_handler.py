@@ -41,7 +41,7 @@ class HandleRequests(BaseHTTPRequestHandler):
     def parse_url(self, path):
         """Parse the url into the resource and id"""
         parsed_url = urlparse(path)
-        path_params = parsed_url.path.split('/')  # ['', 'snakes', 1]
+        path_params = parsed_url.path.split('/') 
         resource = path_params[1]
 
         if parsed_url.query:
@@ -165,17 +165,26 @@ class HandleRequests(BaseHTTPRequestHandler):
         
 
     def do_PUT(self):
-        """Handles PUT requests to the server"""
-        pass
+            content_len = int(self.headers.get('content-length', 0))
+            post_body = self.rfile.read(content_len)
+            post_body = json.loads(post_body)
+
+            (resource, id) = self.parse_url(self.path)
+            success = False
+            if resource == "posts":
+                success = update_post(id, post_body)
+
+            if success:
+                self._set_headers(204)
+            else:
+                self._set_headers(404)
+            self.wfile.write("".encode())
 
     def do_DELETE(self):
-        # Set a 204 response code
         self._set_headers(204)
 
-    # Parse the URL
         (resource, id) = self.parse_url(self.path)
 
-    # Delete a single animal from the list
         if resource == "posts":
             delete_post(id)
 
