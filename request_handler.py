@@ -3,6 +3,7 @@ import json
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from views import get_single_post, get_all_posts
 from views import get_all_users, get_single_user, get_user_by_username
+from views import get_all_comments_by_post
 from views import create_user, login_user
 from views import get_all_comments_by_post, get_all_comments, get_single_comment
 
@@ -104,7 +105,6 @@ class HandleRequests(BaseHTTPRequestHandler):
                 else:
                     self._set_headers(200)
                     response = get_all_users()
-
 
             elif resource == "comments":
                 if id is not None:
