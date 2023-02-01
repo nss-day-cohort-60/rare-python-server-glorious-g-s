@@ -1,16 +1,24 @@
-from http.server import BaseHTTPRequestHandler, HTTPServer
+from urllib.parse import urlparse, parse_qs
 import json
-
+from http.server import BaseHTTPRequestHandler, HTTPServer
+from views import get_single_post, get_all_posts
+from views import get_all_users, get_single_user
 from views.user import create_user, login_user
 
 
 class HandleRequests(BaseHTTPRequestHandler):
     """Handles the requests to this server"""
 
-    def parse_url(self):
+    def parse_url(self, path):
         """Parse the url into the resource and id"""
+        parsed_url = urlparse(path)
         path_params = self.path.split('/')
         resource = path_params[1]
+
+        if parsed_url.query:
+            query = parse_qs(parsed_url.query)
+            return (resource, query)
+            
         if '?' in resource:
             param = resource.split('?')[1]
             resource = resource.split('?')[0]
@@ -50,9 +58,35 @@ class HandleRequests(BaseHTTPRequestHandler):
         self.end_headers()
 
     def do_GET(self):
+        self._set_headers(200)
         """Handle Get requests to the server"""
-        pass
 
+        response = {}
+
+        # Parse URL and store entire tuple in a variable
+        parsed = self.parse_url(self.path)
+
+        # If the path does not include a query parameter, continue with the original if block
+        if '?' not in self.path:
+            ( resource, id ) = parsed
+
+            if resource == "posts":
+                if id is not None:
+                    response = get_single_post(id)
+                else:
+                    response = get_all_posts()
+
+            elif resource == "users":
+                if id is not None:
+                    response = get_single_user(id)
+                
+                else: 
+                    response = get_all_users()
+
+
+        self.wfile.write(json.dumps(response).encode())
+
+        pass
 
     def do_POST(self):
         """Make a post request to the server"""

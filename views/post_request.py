@@ -2,6 +2,7 @@ import sqlite3
 import json
 from models import Post
 
+
 def get_all_posts():
     # Open a connection to the database
     with sqlite3.connect("./loaddata.sqlite3") as conn:
