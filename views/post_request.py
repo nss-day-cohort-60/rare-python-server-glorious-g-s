@@ -33,10 +33,7 @@ def get_all_posts():
         # Iterate list of data returned from database
         for row in dataset:
 
-            # Create an animal instance from the current row.
-            # Note that the database fields are specified in
-            # exact order of the parameters defined in the
-            # Animal class above.
+            # Create an post instance from the current row.
             post = Post(row['id'], row['user_id'], row["title"], row["publication_date"], row["image_url"],
                         row['content'], row['approved'])
 
@@ -73,3 +70,30 @@ def get_single_post(id):
                             data['content'], data['approved'])
 
         return post.__dict__
+
+
+def create_post(new_post):
+    with sqlite3.connect("./loaddata.sqlite3") as conn:
+        db_cursor = conn.cursor()
+
+        db_cursor.execute("""
+        INSERT INTO Post
+            ( user_id, title, publication_id, image_url, content, approved )
+        VALUES
+            ( ?, ?, ?, ?, ?, ?);
+        """, (new_post['user_id'], new_post['title'],
+              new_post['publication_id'], new_post['image_url'],
+              new_post['content'], new_post['approved'] ))
+
+        # The `lastrowid` property on the cursor will return
+        # the primary key of the last thing that got added to
+        # the database.
+        id = db_cursor.lastrowid
+
+        # Add the `id` property to the animal dictionary that
+        # was sent by the client so that the client sees the
+        # primary key in the response.
+        new_post['id'] = id
+
+
+    return new_post
