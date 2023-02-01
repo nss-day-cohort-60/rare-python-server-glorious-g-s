@@ -3,6 +3,7 @@ import json
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from views import get_single_post, get_all_posts, create_post
 from views import get_all_users, get_single_user
+from views import get_all_comments_by_post
 from views.user import create_user, login_user
 
 
@@ -86,7 +87,19 @@ class HandleRequests(BaseHTTPRequestHandler):
                     self._set_headers(200)
                     response = get_all_users()
 
+            if resource == "comments":
+                if id is not None:
+                    self._set_headers(200)
+                    response = get_all_comments_by_post(id)
+            
+        else: # There is a ? in the path, run the query param functions
+            (resource, query) = parsed
 
+            # see if the query dictionary has an email key
+            if query.get('posts') and resource == 'comments':
+                response = get_all_comments_by_post(query['post_id'][0])
+
+    
         self.wfile.write(json.dumps(response).encode())
 
         pass
