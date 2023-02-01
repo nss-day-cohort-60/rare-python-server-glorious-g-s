@@ -35,10 +35,10 @@ def create_comment(new_comment):
         db_cursor = conn.cursor()
 
         db_cursor.execute("""
-        INSERT INTO Comment
+        INSERT INTO Comments
             ( post_id, author_id, content )
         VALUES
-            ( ?, ?, ?, ?, ?);
+            ( ?, ?, ?);
         """, (new_comment['post_id'], new_comment['author_id'],
             new_comment['content'] ))
 
