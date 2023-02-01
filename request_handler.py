@@ -191,8 +191,6 @@ class HandleRequests(BaseHTTPRequestHandler):
         if resource == "comments":
             delete_comment(id)
 
-
-    # Encode the new animal and send in response
         self.wfile.write("".encode())
 
 
