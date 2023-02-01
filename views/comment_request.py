@@ -17,8 +17,8 @@ def get_all_comments_by_post(post_id):
             c.post_id,
             c.author_id,
             c.content
-        FROM Comment c
-        WHERE a.post_id = ?
+        FROM Comments c
+        WHERE c.post_id = ?
         """, (post_id, ))
 
         # Initialize an empty list to hold all comment representations
@@ -43,7 +43,7 @@ def create_comment(new_comment):
         db_cursor = conn.cursor()
 
         db_cursor.execute("""
-        INSERT INTO Comment
+        INSERT INTO Comments
             ( post_id, author_id, content )
         VALUES
             ( ?, ?, ?, ?, ?);
@@ -68,6 +68,6 @@ def delete_comment(id):
         db_cursor = conn.cursor()
 
         db_cursor.execute("""
-        DELETE FROM comment
+        DELETE FROM comments
         WHERE id = ?
         """, (id, ))
