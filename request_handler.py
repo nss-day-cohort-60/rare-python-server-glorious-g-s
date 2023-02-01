@@ -6,7 +6,7 @@ from views import get_single_post, get_all_posts, create_post
 from views import get_all_users, get_single_user, get_user_by_username
 from views import get_all_comments_by_post
 from views import create_user, login_user
-from views import get_all_comments_by_post, get_all_comments, get_single_comment
+from views import get_all_comments_by_post, get_all_comments, get_single_comment, create_comment, delete_comment
 
 
 
@@ -138,22 +138,47 @@ class HandleRequests(BaseHTTPRequestHandler):
         content_len = int(self.headers.get('content-length', 0))
         post_body = json.loads(self.rfile.read(content_len))
         response = ''
-        resource, _ = self.parse_url()
+        (resource, id) = self.parse_url(self.path)
 
+        new_post = None
+        new_comment = None
+        
         if resource == 'login':
             response = login_user(post_body)
         if resource == 'register':
             response = create_user(post_body)
+            
+        if resource == 'posts':
+            new_post = create_post(post_body)
+        if resource == 'comments':
+            new_comment = create_comment(post_body)
 
-        self.wfile.write(response.encode())
+        self.wfile.write(json.dumps(response).encode())
+        self.wfile.write(json.dumps(new_post).encode())
+        self.wfile.write(json.dumps(new_comment).encode())
+        
 
     def do_PUT(self):
         """Handles PUT requests to the server"""
         pass
 
     def do_DELETE(self):
-        """Handle DELETE Requests"""
-        pass
+        # Set a 204 response code
+        self._set_headers(204)
+
+    # Parse the URL
+        (resource, id) = self.parse_url(self.path)
+
+    # Delete a single animal from the list
+        if resource == "posts":
+            delete_post(id)
+
+        if resource == "comments":
+            delete_comment(id)
+
+
+    # Encode the new animal and send in response
+        self.wfile.write("".encode())
 
 
 def main():
