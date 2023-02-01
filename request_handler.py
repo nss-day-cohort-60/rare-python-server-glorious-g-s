@@ -18,7 +18,6 @@ class HandleRequests(BaseHTTPRequestHandler):
         if parsed_url.query:
             query = parse_qs(parsed_url.query)
             return (resource, query)
-            
         if '?' in resource:
             param = resource.split('?')[1]
             resource = resource.split('?')[0]
@@ -58,7 +57,7 @@ class HandleRequests(BaseHTTPRequestHandler):
         self.end_headers()
 
     def do_GET(self):
-        self._set_headers(200)
+        
         """Handle Get requests to the server"""
 
         response = {}
@@ -73,14 +72,18 @@ class HandleRequests(BaseHTTPRequestHandler):
             if resource == "posts":
                 if id is not None:
                     response = get_single_post(id)
+                    self._set_headers(200)
                 else:
+                    self._set_headers(200)
                     response = get_all_posts()
 
             elif resource == "users":
                 if id is not None:
+                    self._set_headers(200)
                     response = get_single_user(id)
                 
-                else: 
+                else:
+                    self._set_headers(200)
                     response = get_all_users()
 
 
