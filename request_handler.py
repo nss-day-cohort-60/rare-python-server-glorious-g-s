@@ -3,6 +3,7 @@ import json
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from views import get_single_post, get_all_posts
 from views import get_all_users, get_single_user
+from views import get_all_comments_by_post
 from views.user import create_user, login_user
 
 
@@ -12,26 +13,19 @@ class HandleRequests(BaseHTTPRequestHandler):
     def parse_url(self, path):
         """Parse the url into the resource and id"""
         parsed_url = urlparse(path)
-        path_params = self.path.split('/')
+        path_params = parsed_url.path.split('/')  # ['', 'animals', 1]
         resource = path_params[1]
 
         if parsed_url.query:
             query = parse_qs(parsed_url.query)
             return (resource, query)
-        if '?' in resource:
-            param = resource.split('?')[1]
-            resource = resource.split('?')[0]
-            pair = param.split('=')
-            key = pair[0]
-            value = pair[1]
-            return (resource, key, value)
-        else:
-            id = None
-            try:
-                id = int(path_params[2])
-            except (IndexError, ValueError):
-                pass
-            return (resource, id)
+
+        pk = None
+        try:
+            pk = int(path_params[2])
+        except (IndexError, ValueError):
+            pass
+        return (resource, pk)
 
     def _set_headers(self, status):
         """Sets the status code, Content-Type and Access-Control-Allow-Origin
@@ -85,12 +79,15 @@ class HandleRequests(BaseHTTPRequestHandler):
                 else:
                     self._set_headers(200)
                     response = get_all_users()
-        else:
+            
+        else: # There is a ? in the path, run the query param functions
             (resource, query) = parsed
 
-            if query.get('')
+            # see if the query dictionary has an email key
+            if query.get('post_id') and resource == 'comments':
+                response = get_all_comments_by_post(query['post_id'][0])
 
-
+    
         self.wfile.write(json.dumps(response).encode())
 
         
