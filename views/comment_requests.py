@@ -2,8 +2,6 @@ import sqlite3
 import json
 from models import Comment
 
-
-
 def get_all_comments_by_post(post_id):
     with sqlite3.connect("./loaddata.sqlite3") as conn:
 
@@ -18,7 +16,7 @@ def get_all_comments_by_post(post_id):
             c.content
         FROM Comments c
         WHERE c.post_id = ?
-        """, (post_id,))
+        """, (post_id, ))
 
         comments = []
 
@@ -42,7 +40,7 @@ def create_comment(new_comment):
         VALUES
             ( ?, ?, ?, ?, ?);
         """, (new_comment['post_id'], new_comment['author_id'],
-              new_comment['content'] ))
+            new_comment['content'] ))
 
         id = db_cursor.lastrowid
 
