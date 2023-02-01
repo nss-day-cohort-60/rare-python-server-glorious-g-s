@@ -1,18 +1,24 @@
-
+from urllib.parse import urlparse, parse_qs
 import json
 from http.server import BaseHTTPRequestHandler, HTTPServer
-from views import get_single_post
-from views import get_user_request
+from views import get_single_post, get_all_posts
+from views import get_all_users, get_single_user
 from views.user import create_user, login_user
 
 
 class HandleRequests(BaseHTTPRequestHandler):
     """Handles the requests to this server"""
 
-    def parse_url(self):
+    def parse_url(self, path):
         """Parse the url into the resource and id"""
+        parsed_url = urlparse(path)
         path_params = self.path.split('/')
         resource = path_params[1]
+
+        if parsed_url.query:
+            query = parse_qs(parsed_url.query)
+            return (resource, query)
+            
         if '?' in resource:
             param = resource.split('?')[1]
             resource = resource.split('?')[0]
@@ -52,6 +58,7 @@ class HandleRequests(BaseHTTPRequestHandler):
         self.end_headers()
 
     def do_GET(self):
+        self._set_headers(200)
         """Handle Get requests to the server"""
 
         response = {}
@@ -66,21 +73,15 @@ class HandleRequests(BaseHTTPRequestHandler):
             if resource == "posts":
                 if id is not None:
                     response = get_single_post(id)
-                    if response is not None:
-                        self._set_headers(200)
-                    else: 
-                        if response is None:
-                            self._set_headers(404)
                 else:
-                    self._set_headers(200)
                     response = get_all_posts()
 
-        else: # There is a ? in the path, run the query param functions
-            (resource, query) = parsed
-
-            # see if the query dictionary has an email key
-            if query.get('posts') and resource == 'posts':
-                response = get_all_posts(query['posts'][0])
+            elif resource == "users":
+                if id is not None:
+                    response = get_single_user(id)
+                
+                else: 
+                    response = get_all_users()
 
 
         self.wfile.write(json.dumps(response).encode())

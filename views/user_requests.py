@@ -54,7 +54,7 @@ def get_single_user(id):
             u.password,
             u.profile_image_url,
             u.created_on,
-            u.active,
+            u.active
         FROM Users u
         WHERE u.id = ?
         """, (id, ))
