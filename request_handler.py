@@ -1,8 +1,7 @@
 from urllib.parse import urlparse, parse_qs
 import json
 from http.server import BaseHTTPRequestHandler, HTTPServer
-
-from views import get_single_post, get_all_posts, create_post
+from views import get_single_post, get_all_posts, create_post, get_all_posts_by_user, get_all_posts_by_title
 from views import get_all_users, get_single_user, get_user_by_username
 from views import get_all_comments_by_post
 from views import create_user, login_user
@@ -73,9 +72,9 @@ class HandleRequests(BaseHTTPRequestHandler):
         self.send_response(200)
         self.send_header('Access-Control-Allow-Origin', '*')
         self.send_header('Access-Control-Allow-Methods',
-                         'GET, POST, PUT, DELETE')
+                        'GET, POST, PUT, DELETE')
         self.send_header('Access-Control-Allow-Headers',
-                         'X-Requested-With, Content-Type, Accept')
+                        'X-Requested-With, Content-Type, Accept')
         self.end_headers()
 
     def do_GET(self):
@@ -84,10 +83,8 @@ class HandleRequests(BaseHTTPRequestHandler):
 
         response = {}
 
-        # Parse URL and store entire tuple in a variable
         parsed = self.parse_url(self.path)
 
-        # If the path does not include a query parameter, continue with the original if block
         if '?' not in self.path:
             ( resource, id ) = parsed
 
@@ -127,6 +124,14 @@ class HandleRequests(BaseHTTPRequestHandler):
             elif query.get('post_id') and resource == 'comments':
                 self._set_headers(200)
                 response = get_all_comments_by_post(query['post_id'][0])
+            
+            elif query.get('title') and resource == 'posts':
+                self._set_headers(200)
+                response = get_all_posts_by_title(query['title'][0])
+
+            elif query.get('user_id') and resource == 'posts':
+                self._set_headers(200)
+                response = get_all_posts_by_user(query['user_id'][0])
                 
         self.wfile.write(json.dumps(response).encode())
 
