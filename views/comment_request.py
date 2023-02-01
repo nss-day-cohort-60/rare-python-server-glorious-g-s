@@ -1,10 +1,10 @@
 import sqlite3
 import json
-import models
+from models import Comment
 
-def get_all_comments():
+def get_all_comments_by_post(post_id):
     # Open a connection to the database
-    with sqlite3.connect("./kennel.sqlite3") as conn:
+    with sqlite3.connect("./loaddata.sqlite3") as conn:
 
         # Just use these. It's a Black Box.
         conn.row_factory = sqlite3.Row
@@ -13,20 +13,16 @@ def get_all_comments():
         # Write the SQL query to get the information you want
         db_cursor.execute("""
         SELECT
-            a.id,
-            a.post_id,
-            a.author_id,
-            a.content,
-            b.
-        FROM Animal a
-        JOIN Post b
-            ON l.id = a.post_id
-        JOIN Customer c
-            ON c.id = a.customer_id
-        """)
+            c.id,
+            c.post_id,
+            c.author_id,
+            c.content
+        FROM Comment c
+        WHERE a.post_id = ?
+        """, (post_id, ))
 
-        # Initialize an empty list to hold all animal representations
-        animals = []
+        # Initialize an empty list to hold all comment representations
+        comments = []
 
         # Convert rows of data into a Python list
         dataset = db_cursor.fetchall()
@@ -34,19 +30,44 @@ def get_all_comments():
         # Iterate list of data returned from database
         for row in dataset:
 
-            # Create an animal instance from the current row
-            animal = Animal(row['id'], row['name'], row['breed'], row['status'],
-                            row['location_id'], row['customer_id'])
+            # Create an comment instance from the current row
+            comment = Comment(row['id'], row['post_id'], row['author_id'], row['content'])
 
-            # Create a Location instance from the current row
-            location = Location(row['id'], row['location_name'], row['location_address'])
-            customer = Customer(row['id'], row['customer_name'], row['customer_address'], row['customer_email'])
+            # Add the dictionary representation of the comment to the list
+            comments.append(comment.__dict__)
 
-            # Add the dictionary representation of the location to the animal
-            animal.location = location.__dict__
-            animal.customer = customer.__dict__
+    return comments
 
-            # Add the dictionary representation of the animal to the list
-            animals.append(animal.__dict__)
+def create_comment(new_comment):
+    with sqlite3.connect("./loaddata.sqlite3") as conn:
+        db_cursor = conn.cursor()
 
-    return animals
+        db_cursor.execute("""
+        INSERT INTO Comment
+            ( post_id, author_id, content )
+        VALUES
+            ( ?, ?, ?, ?, ?);
+        """, (new_comment['post_id'], new_comment['author_id'],
+              new_comment['content'] ))
+
+        # The `lastrowid` property on the cursor will return
+        # the primary key of the last thing that got added to
+        # the database.
+        id = db_cursor.lastrowid
+
+        # Add the `id` property to the comment dictionary that
+        # was sent by the client so that the client sees the
+        # primary key in the response.
+        new_comment['id'] = id
+
+
+    return new_comment
+
+def delete_comment(id):
+    with sqlite3.connect("./kennel.sqlite3") as conn:
+        db_cursor = conn.cursor()
+
+        db_cursor.execute("""
+        DELETE FROM comment
+        WHERE id = ?
+        """, (id, ))
