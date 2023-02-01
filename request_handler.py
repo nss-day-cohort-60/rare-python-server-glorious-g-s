@@ -3,7 +3,7 @@ import json
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from views import get_single_post, get_all_posts
 from views import get_all_users, get_single_user
-from views.user import create_user, login_user
+from views import create_user, login_user
 
 
 class HandleRequests(BaseHTTPRequestHandler):
