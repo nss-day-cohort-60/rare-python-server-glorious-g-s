@@ -84,6 +84,18 @@ def create_post(new_post):
 
     return new_post
 
+
+
+
+def delete_post(id):
+    with sqlite3.connect("./loaddata.sqlite3") as conn:
+        db_cursor = conn.cursor()
+
+        db_cursor.execute("""
+        DELETE FROM posts
+        WHERE id = ?
+        """, (id, ))
+
 def get_all_posts_by_title(title):
     with sqlite3.connect("./loaddata.sqlite3") as conn:
 
@@ -149,3 +161,4 @@ def get_all_posts_by_user(user_id):
 
 
     return posts
+
