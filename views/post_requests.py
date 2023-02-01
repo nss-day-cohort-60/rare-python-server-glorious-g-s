@@ -69,7 +69,7 @@ def create_post(new_post):
         db_cursor = conn.cursor()
 
         db_cursor.execute("""
-        INSERT INTO Post
+        INSERT INTO Posts
             ( user_id, title, publication_date, image_url, content, approved )
         VALUES
             ( ?, ?, ?, ?, ?, ?);
