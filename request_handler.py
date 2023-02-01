@@ -8,6 +8,7 @@ from views import create_user, login_user
 from views import get_all_comments_by_post, get_all_comments, get_single_comment
 
 
+
 class HandleRequests(BaseHTTPRequestHandler):
     """Handles the requests to this server"""
 
