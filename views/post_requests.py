@@ -168,7 +168,7 @@ def update_post(id, new_post):
         db_cursor = conn.cursor()
 
         db_cursor.execute("""
-        UPDATE Post
+        UPDATE Posts
             SET
                 user_id = ?,
                 title = ?,
