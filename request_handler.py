@@ -7,6 +7,7 @@ from views import create_user, login_user
 from views import get_all_comments_by_post, get_all_comments, get_single_comment
 
 
+
 class HandleRequests(BaseHTTPRequestHandler):
     """Handles the requests to this server"""
 
@@ -105,6 +106,17 @@ class HandleRequests(BaseHTTPRequestHandler):
                     self._set_headers(200)
                     response = get_all_users()
 
+            if resource == "comments":
+                if id is not None:
+                    self._set_headers(200)
+                    response = get_all_comments_by_post(id)
+            
+        else: # There is a ? in the path, run the query param functions
+            (resource, query) = parsed
+
+            # see if the query dictionary has an email key
+            if query.get('posts') and resource == 'comments':
+                response = get_all_comments_by_post(query['post_id'][0])
 
             elif resource == "comments":
                 if id is not None:
