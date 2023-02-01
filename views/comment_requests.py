@@ -50,7 +50,7 @@ def create_comment(new_comment):
     return new_comment
 
 def delete_comment(id):
-    with sqlite3.connect("./kennel.sqlite3") as conn:
+    with sqlite3.connect("./loaddata.sqlite3") as conn:
         db_cursor = conn.cursor()
 
         db_cursor.execute("""

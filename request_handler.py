@@ -166,7 +166,7 @@ class HandleRequests(BaseHTTPRequestHandler):
 
     def do_PUT(self):
         """Handles PUT requests to the server"""
-        pass
+        self.do_PUT()
 
     def do_DELETE(self):
         # Set a 204 response code
