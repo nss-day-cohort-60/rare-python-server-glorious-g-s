@@ -21,6 +21,7 @@ def get_all_users():
             u.created_on,
             u.active
         FROM Users u
+        ORDER BY u.username ASC
         """)
 
         users = []
