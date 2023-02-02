@@ -54,7 +54,7 @@ def delete_comment(id):
         db_cursor = conn.cursor()
 
         db_cursor.execute("""
-        DELETE FROM comment
+        DELETE FROM Comments
         WHERE id = ?
         """, (id, ))
 
