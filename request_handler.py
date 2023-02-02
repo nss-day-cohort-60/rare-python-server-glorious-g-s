@@ -1,7 +1,6 @@
 from urllib.parse import urlparse, parse_qs
 import json
 from http.server import BaseHTTPRequestHandler, HTTPServer
-
 from views import get_single_post, get_all_posts, create_post, get_all_posts_by_user, get_all_posts_by_title, delete_post, update_post
 from views import get_all_users, get_single_user, get_user_by_username
 from views import get_all_comments_by_post
@@ -41,7 +40,7 @@ class HandleRequests(BaseHTTPRequestHandler):
     def parse_url(self, path):
         """Parse the url into the resource and id"""
         parsed_url = urlparse(path)
-        path_params = parsed_url.path.split('/')  # ['', 'snakes', 1]
+        path_params = parsed_url.path.split('/') 
         resource = path_params[1]
 
         if parsed_url.query:
@@ -165,27 +164,33 @@ class HandleRequests(BaseHTTPRequestHandler):
         
 
     def do_PUT(self):
-        """Handles PUT requests to the server"""
-        pass
+            content_len = int(self.headers.get('content-length', 0))
+            post_body = self.rfile.read(content_len)
+            post_body = json.loads(post_body)
+
+            (resource, id) = self.parse_url(self.path)
+            success = False
+            if resource == "posts":
+                success = update_post(id, post_body)
+
+            if success:
+                self._set_headers(204)
+            else:
+                self._set_headers(404)
+            self.wfile.write("".encode())
 
     def do_DELETE(self):
-        # Set a 204 response code
         self._set_headers(204)
 
-    # Parse the URL
         (resource, id) = self.parse_url(self.path)
 
-    # Delete a single animal from the list
         if resource == "posts":
             delete_post(id)
 
         if resource == "comments":
             delete_comment(id)
 
-
-    # Encode the new animal and send in response
         self.wfile.write("".encode())
-
 
 def main():
     """Starts the server on port 8088 using the HandleRequests class
@@ -193,7 +198,6 @@ def main():
     host = ''
     port = 8088
     HTTPServer((host, port), HandleRequests).serve_forever()
-
 
 if __name__ == "__main__":
     main()
