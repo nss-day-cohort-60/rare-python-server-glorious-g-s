@@ -155,13 +155,11 @@ class HandleRequests(BaseHTTPRequestHandler):
             response = create_user(post_body)
             
         if resource == 'posts':
-            new_post = create_post(post_body)
+            response = create_post(post_body)
         if resource == 'comments':
-            new_comment = create_comment(post_body)
+            response = create_comment(post_body)
 
         self.wfile.write(json.dumps(response).encode())
-        self.wfile.write(json.dumps(new_post).encode())
-        self.wfile.write(json.dumps(new_comment).encode())
         
 
     def do_PUT(self):
