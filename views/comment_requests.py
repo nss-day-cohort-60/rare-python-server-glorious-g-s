@@ -14,7 +14,7 @@ def get_all_comments_by_post(post_id):
             c.post_id,
             c.author_id,
             c.content
-        FROM Comments c
+        FROM comments c
         WHERE c.post_id = ?
         """, (post_id, ))
 

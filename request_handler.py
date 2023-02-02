@@ -135,7 +135,7 @@ class HandleRequests(BaseHTTPRequestHandler):
                 
         self.wfile.write(json.dumps(response).encode())
 
-        pass
+        
 
     def do_POST(self):
         """Make a post request to the server"""
@@ -154,30 +154,30 @@ class HandleRequests(BaseHTTPRequestHandler):
             response = create_user(post_body)
             
         if resource == 'posts':
-            new_post = create_post(post_body)
+            response = create_post(post_body)
         if resource == 'comments':
-            new_comment = create_comment(post_body)
+            response = create_comment(post_body)
 
         self.wfile.write(json.dumps(response).encode())
-        self.wfile.write(json.dumps(new_post).encode())
-        self.wfile.write(json.dumps(new_comment).encode())
         
 
     def do_PUT(self):
-            content_len = int(self.headers.get('content-length', 0))
-            post_body = self.rfile.read(content_len)
-            post_body = json.loads(post_body)
+        """Handles PUT requests to the server"""
+    
+        content_len = int(self.headers.get('content-length', 0))
+        post_body = self.rfile.read(content_len)
+        post_body = json.loads(post_body)
 
-            (resource, id) = self.parse_url(self.path)
-            success = False
-            if resource == "posts":
-                success = update_post(id, post_body)
+        (resource, id) = self.parse_url(self.path)
+        success = False
+        if resource == "posts":
+            success = update_post(id, post_body)
 
-            if success:
-                self._set_headers(204)
-            else:
-                self._set_headers(404)
-            self.wfile.write("".encode())
+        if success:
+            self._set_headers(204)
+        else:
+            self._set_headers(404)
+        self.wfile.write("".encode())
 
     def do_DELETE(self):
         self._set_headers(204)
