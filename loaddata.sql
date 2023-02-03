@@ -51,6 +51,6 @@ INSERT INTO `Comments` VALUES (NULL, 1, 2, "That is not how you win a superbowl.
 DELETE FROM Users 
 WHERE id >= 3
 
-UPDATE Comments
-SET post_id = 1
-WHERE id = 1
+UPDATE Posts
+SET user_id = 2
+WHERE id = 2

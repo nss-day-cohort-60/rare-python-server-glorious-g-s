@@ -133,6 +133,7 @@ class HandleRequests(BaseHTTPRequestHandler):
                 self._set_headers(200)
                 response = get_all_posts_by_user(query['user_id'][0])
                 
+                
         self.wfile.write(json.dumps(response).encode())
 
         
