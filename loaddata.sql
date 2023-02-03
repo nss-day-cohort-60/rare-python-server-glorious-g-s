@@ -23,13 +23,16 @@ CREATE TABLE "Subscriptions" (
 CREATE TABLE "Posts" (
   "id" INTEGER PRIMARY KEY AUTOINCREMENT,
   "user_id" INTEGER,
+  "category_id" INTEGER,
   "title" varchar,
   "publication_date" date,
   "image_url" varchar,
   "content" varchar,
   "approved" bit,
   FOREIGN KEY(`user_id`) REFERENCES `Users`(`id`)
+  FOREIGN KEY(`category_id`) REFERENCES `Categories`(`id`)
 );
+
 
 CREATE TABLE "Comments" (
   "id" INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -50,7 +53,7 @@ INSERT INTO `Users` VALUES (null, "Jalen", "Hurts", "hurts@hurts.com", "Football
 
 INSERT INTO `Subscriptions` VALUES (null, 1, 2, 01312023);
 
-INSERT INTO `Posts` VALUES (NULL, 2, "How to win a superbowl", 02072023, "https://www.si.com/.image/ar_4:3%2Cc_fill%2Ccs_srgb%2Cfl_progressive%2Cq_auto:good%2Cw_1200/MTc0NDU1OTQyMjAzNjQ3NjIy/college-football-covid-symptoms-cases-players.jpg", "You can win a superbowl by outscoring your opponent.", 1);
+INSERT INTO `Posts` VALUES (NULL, 2, 2, "Yur", 02072023, "https://www.si.com/.image/ar_4:3%2Cc_fill%2Ccs_srgb%2Cfl_progressive%2Cq_auto:good%2Cw_1200/MTc0NDU1OTQyMjAzNjQ3NjIy/college-football-covid-symptoms-cases-players.jpg", "You can win a superbowl by outscoring your opponent.", 1);
 
 INSERT INTO `Comments` VALUES (NULL, 1, 2, "That is not how you win a superbowl.");
 
@@ -63,25 +66,5 @@ INSERT INTO `Categories` VALUES (NULL, "News");
 INSERT INTO `Categories` VALUES (NULL, "Travel");
 
 
-
-
-
-
-
-
-
-DELETE FROM Users 
-WHERE id >= 3
-
-UPDATE Posts
-SET user_id = 2
-WHERE id = 2
-
-CREATE TABLE "Comments" (
-  "id" INTEGER PRIMARY KEY AUTOINCREMENT,
-  "post_id" INTEGER,
-  "author_id" INTEGER,
-  "content" varchar,
-  FOREIGN KEY(`post_id`) REFERENCES `Posts`(`id`),
-  FOREIGN KEY(`author_id`) REFERENCES `Users`(`id`)
-);
+DELETE FROM Posts 
+WHERE id >= 1
