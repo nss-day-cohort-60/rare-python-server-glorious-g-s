@@ -20,6 +20,7 @@ def get_all_posts():
             a.content,
             a.approved
         FROM posts a
+        ORDER BY a.publication_date DESC
         """)
 
         posts = []
