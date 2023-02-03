@@ -1,6 +1,7 @@
 import sqlite3
 import json
 from models import Post
+from models import User
 
 
 def get_all_posts():
@@ -47,21 +48,44 @@ def get_single_post(id):
             a.publication_date,
             a.image_url,
             a.content,
-            a.approved
-        FROM posts a
+            a.approved,
+            u.first_name,
+            u.last_name,
+            u.email,
+            u.bio,
+            u.username,
+            u.password,
+            u.profile_image_url,
+            u.created_on,
+            u.active
+        FROM Posts a
+        JOIN Users u
+            ON u.id = a.user_id
         WHERE a.id = ?
         """, ( id, ))
 
-        data = db_cursor.fetchone()
+        posts = []
 
-        if data is None:
-            return {}
+        dataset = db_cursor.fetchall()
 
-        post= Post(data['id'], data['user_id'], data['title'],
-                            data['publication_date'], data['image_url'],
-                            data['content'], data['approved'])
+        for row in dataset:
 
-        return post.__dict__
+            post = Post(row['id'], row['user_id'], row['title'],
+                                row['publication_date'], row['image_url'],
+                                row['content'], row['approved'])
+
+            user = User(row['id'], row['first_name'], row['last_name'], row['email'],
+                                row['bio'], row['username'], row['password'], row['profile_image_url'],row['created_on'], row['active'])
+
+
+            post.user = user.__dict__
+
+
+            posts.append(post.__dict__)
+
+    return posts
+
+
 
 
 def create_post(new_post):
