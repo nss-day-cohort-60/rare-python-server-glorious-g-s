@@ -1,6 +1,6 @@
 import sqlite3
 import json
-from models import Comment
+from models import Comment, User
 
 def get_all_comments_by_post(post_id):
     with sqlite3.connect("./loaddata.sqlite3") as conn:
@@ -13,8 +13,19 @@ def get_all_comments_by_post(post_id):
             c.id,
             c.post_id,
             c.author_id,
-            c.content
+            c.content,
+            u.first_name,
+            u.last_name,
+            u.email,
+            u.bio,
+            u.username,
+            u.password,
+            u.profile_image_url,
+            u.created_on,
+            u.active
         FROM comments c
+        JOIN Users u
+            ON u.id = c.author_id
         WHERE c.post_id = ?
         """, (post_id, ))
 
@@ -25,6 +36,11 @@ def get_all_comments_by_post(post_id):
         for row in dataset:
 
             comment = Comment(row['id'], row['post_id'], row['author_id'], row['content'])
+
+            user = User(row['id'], row['first_name'], row['last_name'], row['email'],
+                                row['bio'], row['username'], row['password'], row['profile_image_url'],row['created_on'], row['active'])
+
+            comment.user = user.__dict__
 
             comments.append(comment.__dict__)
 

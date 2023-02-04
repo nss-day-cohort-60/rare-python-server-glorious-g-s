@@ -68,3 +68,5 @@ INSERT INTO `Categories` VALUES (NULL, "Travel");
 
 DELETE FROM Posts 
 WHERE id >= 1
+
+DROP TABLE Posts

@@ -6,7 +6,6 @@ from views import get_all_users, get_single_user, get_user_by_username
 from views import get_all_comments_by_post
 from views import create_user, login_user
 from views import get_all_comments_by_post, get_all_comments, get_single_comment, create_comment, delete_comment
-from views import get_single_category, get_all_categories
 
 
 
@@ -115,14 +114,6 @@ class HandleRequests(BaseHTTPRequestHandler):
                     self._set_headers(200)
                     response = get_all_comments()
 
-            if resource == "categories":
-                if id is not None:
-                    response = get_single_category(id)
-                    self._set_headers(200)
-                else:
-                    self._set_headers(200)
-                    response = get_all_categories()
-
         else:  # There is a ? in the path, run the query param functions
             (resource, query) = parsed
 
@@ -142,10 +133,9 @@ class HandleRequests(BaseHTTPRequestHandler):
                 self._set_headers(200)
                 response = get_all_posts_by_user(query['user_id'][0])
                 
-                
         self.wfile.write(json.dumps(response).encode())
 
-        
+        pass
 
     def do_POST(self):
         """Make a post request to the server"""
@@ -164,30 +154,30 @@ class HandleRequests(BaseHTTPRequestHandler):
             response = create_user(post_body)
             
         if resource == 'posts':
-            response = create_post(post_body)
+            new_post = create_post(post_body)
         if resource == 'comments':
-            response = create_comment(post_body)
+            new_comment = create_comment(post_body)
 
         self.wfile.write(json.dumps(response).encode())
+        self.wfile.write(json.dumps(new_post).encode())
+        self.wfile.write(json.dumps(new_comment).encode())
         
 
     def do_PUT(self):
-        """Handles PUT requests to the server"""
-    
-        content_len = int(self.headers.get('content-length', 0))
-        post_body = self.rfile.read(content_len)
-        post_body = json.loads(post_body)
+            content_len = int(self.headers.get('content-length', 0))
+            post_body = self.rfile.read(content_len)
+            post_body = json.loads(post_body)
 
-        (resource, id) = self.parse_url(self.path)
-        success = False
-        if resource == "posts":
-            success = update_post(id, post_body)
+            (resource, id) = self.parse_url(self.path)
+            success = False
+            if resource == "posts":
+                success = update_post(id, post_body)
 
-        if success:
-            self._set_headers(204)
-        else:
-            self._set_headers(404)
-        self.wfile.write("".encode())
+            if success:
+                self._set_headers(204)
+            else:
+                self._set_headers(404)
+            self.wfile.write("".encode())
 
     def do_DELETE(self):
         self._set_headers(204)
