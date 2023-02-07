@@ -37,7 +37,7 @@ def get_all_comments_by_post(post_id):
         for row in dataset:
 
             comment = Comment(row['id'], row['post_id'], row['author_id'], row['content'])
- 
+
             user = User(row['id'], row['first_name'], row['last_name'], row['email'],
                                 row['bio'], row['username'], row['password'], row['profile_image_url'],row['created_on'], row['active'])
 

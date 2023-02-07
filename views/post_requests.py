@@ -194,8 +194,22 @@ def get_all_posts_by_user(user_id):
             a.publication_date,
             a.image_url,
             a.content,
-            a.approved
+            a.approved,
+            u.first_name,
+            u.last_name,
+            u.email,
+            u.bio,
+            u.username,
+            u.password,
+            u.profile_image_url,
+            u.created_on,
+            u.active,
+            c.label
         FROM Posts a
+        JOIN Users u
+            ON u.id = a.user_id
+        JOIN Categories c
+            ON c.id = a.category_id
         WHERE a.user_id = ?
         """, (user_id, ))
 
@@ -204,10 +218,18 @@ def get_all_posts_by_user(user_id):
         dataset = db_cursor.fetchall()
 
         for row in dataset:
-            post = Post(row['id'], row['user_id'], row['category_id'], row['title'],
-                            row['publication_date'], row['image_url'],
-                            row['content'], row['approved'])
-        
+
+            post = Post(row['id'], row['user_id'], row['category_id'], row["title"], row["publication_date"], row["image_url"],
+                        row['content'], row['approved'])
+
+            user = User(row['id'], row['first_name'], row['last_name'], row['email'],
+                                row['bio'], row['username'], row['password'], row['profile_image_url'],row['created_on'], row['active'])
+
+            category = Category(row['id'], row['label'])
+
+            post.user = user.__dict__
+            post.category = category.__dict__
+
             posts.append(post.__dict__)
 
 

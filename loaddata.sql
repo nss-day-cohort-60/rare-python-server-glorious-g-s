@@ -66,5 +66,5 @@ INSERT INTO `Categories` VALUES (NULL, "News");
 INSERT INTO `Categories` VALUES (NULL, "Travel");
 
 
-DELETE FROM Posts 
-WHERE id >= 1
+DELETE FROM Users 
+WHERE id >= 6
